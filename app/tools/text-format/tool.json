@@ -1,0 +1,123 @@
+{
+  "apiVersion": "novabox/v1",
+  "metadata": {
+    "id": "text-format",
+    "name": "文本整理",
+    "version": "1.0.0",
+    "summary": "去重、排序、去空行，或统计文本字数与行数。",
+    "category": "文本处理",
+    "icon": "text",
+    "keywords": ["去重", "排序", "空行", "字数", "行数", "文本"],
+    "source": "builtin",
+    "updatedAt": "2026-10-29"
+  },
+  "inputs": {
+    "schema": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "title": "待整理文本",
+          "description": "每行一条记录，支持批量粘贴",
+          "maxLength": 200000,
+          "x-ui": { "widget": "textarea", "rows": 10, "placeholder": "每行一条，直接粘贴即可" }
+        },
+        "operation": {
+          "type": "string",
+          "title": "处理方式",
+          "default": "去重",
+          "enum": ["去重", "排序", "去空行", "统计字数"]
+        },
+        "direction": {
+          "type": "string",
+          "title": "排序方向",
+          "default": "升序",
+          "enum": ["升序", "降序"]
+        }
+      },
+      "required": ["text", "operation"]
+    }
+  },
+  "view": { "layout": "form-result", "submitLabel": "整理文本" },
+  "execution": {
+    "type": "workflow",
+    "steps": [
+      {
+        "type": "switch",
+        "var": "result",
+        "cases": [
+          {
+            "when": "input.operation == '去重'",
+            "steps": [
+              { "type": "transform", "var": "result", "op": "dedupe_lines", "args": { "text": "{{input.text}}" } },
+              { "type": "set", "var": "summary", "value": "重复行已移除" },
+              { "type": "template", "var": "value", "template": "{{vars.result.text}}" },
+              { "type": "template", "var": "details", "template": "输入 {{vars.result.inputLines}} 行，保留 {{vars.result.outputLines}} 行，移除 {{vars.result.duplicates}} 行重复内容。" }
+            ]
+          },
+          {
+            "when": "input.operation == '排序' && input.direction == '降序'",
+            "steps": [
+              { "type": "transform", "var": "result", "op": "sort_lines", "args": { "text": "{{input.text}}", "direction": "desc" } },
+              { "type": "set", "var": "summary", "value": "已按降序排列" },
+              { "type": "template", "var": "value", "template": "{{vars.result.text}}" },
+              { "type": "template", "var": "details", "template": "共 {{vars.result.outputLines}} 行，使用中文语序和数字感知排序。" }
+            ]
+          },
+          {
+            "when": "input.operation == '排序'",
+            "steps": [
+              { "type": "transform", "var": "result", "op": "sort_lines", "args": { "text": "{{input.text}}", "direction": "asc" } },
+              { "type": "set", "var": "summary", "value": "已按升序排列" },
+              { "type": "template", "var": "value", "template": "{{vars.result.text}}" },
+              { "type": "template", "var": "details", "template": "共 {{vars.result.outputLines}} 行，使用中文语序和数字感知排序。" }
+            ]
+          },
+          {
+            "when": "input.operation == '去空行'",
+            "steps": [
+              { "type": "transform", "var": "result", "op": "remove_empty", "args": { "text": "{{input.text}}" } },
+              { "type": "set", "var": "summary", "value": "空行已清理" },
+              { "type": "template", "var": "value", "template": "{{vars.result.text}}" },
+              { "type": "template", "var": "details", "template": "保留 {{vars.result.outputLines}} 行，移除 {{vars.result.removed}} 个空行。" }
+            ]
+          },
+          {
+            "when": "input.operation == '统计字数'",
+            "steps": [
+              { "type": "transform", "var": "result", "op": "count_text", "args": { "text": "{{input.text}}" } },
+              { "type": "set", "var": "summary", "value": "文本统计完成" },
+              { "type": "template", "var": "value", "template": "{{vars.result.characters}} 字符 · {{vars.result.lines}} 行 · {{vars.result.chinese}} 个汉字" },
+              { "type": "template", "var": "details", "template": "去除空白后 {{vars.result.charactersNoSpace}} 字符，英文单词 {{vars.result.words}} 个。" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "outputs": {
+    "mapping": {
+      "summary": "{{vars.summary}}",
+      "value": "{{vars.value}}",
+      "details": "{{vars.details}}"
+    }
+  },
+  "permissions": { "network": false, "filesystem": false, "shell": false, "sideEffects": false },
+  "tests": [
+    {
+      "name": "去重并保留首次出现顺序",
+      "inputs": { "text": "alpha\nbeta\nalpha\ngamma\nbeta", "operation": "去重" },
+      "expect": { "summary": "重复行已移除", "value": "alpha\nbeta\ngamma", "details": "输入 5 行，保留 3 行，移除 2 行重复内容。" }
+    },
+    {
+      "name": "降序排列",
+      "inputs": { "text": "3\n1\n10\n2", "operation": "排序", "direction": "降序" },
+      "expect": { "summary": "已按降序排列", "value": "10\n3\n2\n1" }
+    },
+    {
+      "name": "统计字符、行和汉字",
+      "inputs": { "text": "Hello 世界\nabc", "operation": "统计字数" },
+      "expect": { "value": "12 字符 · 2 行 · 2 个汉字", "details": "去除空白后 10 字符，英文单词 2 个。" }
+    }
+  ]
+}

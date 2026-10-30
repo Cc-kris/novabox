@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Novabox · 本地工具工作台</title>
+  <link rel="stylesheet" href="/styles.css?v=20261029-v2">
+</head>
+<body>
+  <svg class="flow-frame" viewBox="0 0 1000 800" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="flow-spectrum" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#18C998"/>
+        <stop offset=".34" stop-color="#3B9CFF"/>
+        <stop offset=".68" stop-color="#9A63FF"/>
+        <stop offset="1" stop-color="#18C998"/>
+      </linearGradient>
+    </defs>
+    <path class="flow-frame-base" d="M 1.87 1.87 H 980 Q 998 1.87 998 20 V 780 Q 998 798.6 980 798.6 H 1.87"/>
+    <path class="flow-frame-run flow-frame-run-a" pathLength="100" d="M 1.87 1.87 H 980 Q 998 1.87 998 20 V 780 Q 998 798.6 980 798.6 H 1.87"/>
+    <path class="flow-frame-run flow-frame-run-b" pathLength="100" d="M 1.87 1.87 H 980 Q 998 1.87 998 20 V 780 Q 998 798.6 980 798.6 H 1.87"/>
+  </svg>
+
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="header-title-row">
+        <a class="brand" href="#tools" data-view="tools" aria-label="Novabox 工具库">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="26" height="26">
+              <path d="M4 3.5h4.2v17H4v-17Zm7.2 0h4.5l4.1 8.5-4.1 8.5h-4.5l4.1-8.5-4.1-8.5Z" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="brand-copy">
+            <span class="brand-name">Novabox</span>
+            <span class="brand-tag">LOCAL TOOLBOX</span>
+          </span>
+        </a>
+        <span class="connection-pill" id="connection-pill" data-state="loading">
+          <span class="connection-dot"></span><span id="connection-text">连接中</span>
+        </span>
+      </div>
+
+      <nav class="main-nav" aria-label="主导航">
+        <button class="nav-item is-active" data-view="tools">工具列表</button>
+        <button class="nav-item" data-view="history">运行历史</button>
+        <div class="nav-dropdown">
+          <button class="nav-item nav-settings" data-action="toggle-settings-menu" aria-expanded="false">
+            设置
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="nav-dropdown-menu" id="settings-menu" hidden>
+            <button data-view="settings">设置</button>
+            <button data-view="diagnostics">运行诊断</button>
+            <button data-action="sync-tools">重新扫描工具</button>
+          </div>
+        </div>
+      </nav>
+
+      <div class="header-tools">
+        <label class="search-box header-search">
+          <span class="sr-only">搜索工具</span>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input class="search-input" id="tool-search" type="search" placeholder="搜索工具、能力或关键词…" value="" autocomplete="off">
+          <span class="search-hint">⌘ K</span>
+        </label>
+        <button class="filter-toggle" data-action="toggle-favorites" aria-pressed="false">
+          <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="m12 3.6 2.6 5.3 5.9.9-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.2 5.9-.9L12 3.6Z"/></svg>
+          只看收藏
+        </button>
+      </div>
+    </header>
+
+    <main class="app-main" id="main-content" tabindex="-1" aria-live="polite"></main>
+
+    <footer class="app-footer">
+      <div class="footer-left">
+        <span class="live-dot"></span>
+        <span id="footer-status">本地内核启动中</span>
+      </div>
+      <div class="footer-right">
+        <span id="footer-count">—</span>
+        <span class="footer-sep"></span>
+        <span>MCP · stdio</span>
+        <span class="footer-sep"></span>
+        <span>v1.1.0</span>
+      </div>
+    </footer>
+  </div>
+
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="/app.js?v=20261029-v2" type="module"></script>
+</body>
+</html>

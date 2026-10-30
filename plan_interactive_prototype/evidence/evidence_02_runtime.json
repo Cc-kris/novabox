@@ -1,0 +1,21 @@
+{
+  "python": {
+    "path": "/Applications/Galley-0.6.4-prev.app/Contents/Resources/python/bin/python3",
+    "version": "Python 3.11.15",
+    "http_server_available": true,
+    "static_serve_command": "/Applications/Galley-0.6.4-prev.app/Contents/Resources/python/bin/python3 -m http.server 8000"
+  },
+  "node": {
+    "available": false,
+    "reason": "not specified in preflight"
+  },
+  "rg": {
+    "path": "/opt/homebrew/bin/rg",
+    "available": true
+  },
+  "browser_verification": {
+    "method": "web_execute_js / web_scan",
+    "tools_available": true,
+    "note": "macOS无屏幕录制权限，验收用DOM证据而非截图"
+  }
+}

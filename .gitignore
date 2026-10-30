@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build output
+/dist/
+/build/
+/windows/release/
+/windows/node/
+/windows/node-extract/
+node.zip
+
+# Local runtime state and databases
+/app/.run/
+/app/data/
+/app/tools/user/
+*.db
+*.db-shm
+*.db-wal
+*.log
+
+# macOS
+.DS_Store
+__pycache__/
+*.pyc
+
+# Local scratch
+/tmp/
+/smoke.out
+/smoke.err

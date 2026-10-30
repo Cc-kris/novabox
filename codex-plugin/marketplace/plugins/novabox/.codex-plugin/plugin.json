@@ -1,0 +1,44 @@
+{
+  "name": "novabox",
+  "version": "1.1.0",
+  "description": "Local, auditable toolbox for data transforms, calculations, text cleanup, regex tests and reusable workflows.",
+  "author": {
+    "name": "Novabox"
+  },
+  "homepage": "https://localhost/novabox",
+  "license": "MIT",
+  "keywords": [
+    "toolbox",
+    "calculator",
+    "transform",
+    "text",
+    "regex",
+    "json",
+    "local",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Novabox",
+    "shortDescription": "Run local, reusable tools beside Codex",
+    "longDescription": "Novabox is a local toolbox that turns repeated data work into constrained, testable tools. It searches the installed tool library, runs the matching tool with exact inputs, and opens the result in a companion panel beside Codex.",
+    "developerName": "Novabox",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://localhost/novabox",
+    "privacyPolicyURL": "https://localhost/novabox/privacy",
+    "termsOfServiceURL": "https://localhost/novabox/terms",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png",
+    "defaultPrompt": [
+      "用 Novabox 整理这段文本并去重",
+      "在 Novabox 里找一个能计算这批数据的工具",
+      "用 Novabox 测试这个正则表达式"
+    ],
+    "brandColor": "#0E7C66",
+    "screenshots": []
+  }
+}

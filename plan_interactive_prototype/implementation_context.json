@@ -1,0 +1,38 @@
+{
+  "task": "TASK-001 实现Novabox高保真可交互单页原型",
+  "project_root": "/Users/mac/Documents/Dev/Novabox",
+  "work_dir": "/Users/mac/Documents/Dev/Novabox/prototype",
+  "input_files": {
+    "prd": "/Users/mac/Documents/Dev/Novabox/plan_interactive_prototype/prd.md",
+    "ui_brief": "/Users/mac/Documents/Dev/Novabox/plan_interactive_prototype/ui_brief.md",
+    "brand_ui": "/Users/mac/Documents/Dev/Novabox/docs/V1.0/V1.0_ui_brand_design_20261028_V1.md",
+    "technical": "/Users/mac/Documents/Dev/Novabox/plan_interactive_prototype/technical_design.md",
+    "tests": "/Users/mac/Documents/Dev/Novabox/plan_interactive_prototype/test_cases.md",
+    "acceptance": "/Users/mac/Documents/Dev/Novabox/plan_interactive_prototype/acceptance.md",
+    "task": "/Users/mac/Documents/Dev/Novabox/plan_interactive_prototype/task_list.md"
+  },
+  "output_files": [
+    "prototype/index.html",
+    "prototype/styles.css",
+    "prototype/app.js",
+    "prototype/README.md"
+  ],
+  "requirements": [
+    "默认展示360px左右的真实桌面侧窗，但浏览器页面可居中展示宿主+侧窗的精致原型舞台；提供360/400/480宽度控制，760px以上可扩展",
+    "Graphite&Mint深色默认，浅色切换；使用内联SVG，不用CDN/emoji/渐变/玻璃",
+    "至少4个通用工具示例（文本整理、JSON转换、单位换算、规则检查等），不要以亚马逊计算器为产品中心",
+    "工具搜索/分类/收藏、动态表单、必填与数值校验、异步运行防重入、成功/失败、结果复制、历史",
+    "明显的模拟Agent调用入口，自动填参运行并显示来自Codex；标明模拟",
+    "草稿页含测试/权限/来源，确认发布dialog，发布后新工具入库且可打开",
+    "历史快照与复用输入；设置主题/宽度/宿主断开；命令菜单、toast、空态、加载态可演示",
+    "语义HTML、ARIA、focus-visible、Esc关闭dialog、reduced-motion、320/360/760无横向溢出",
+    "提供data-testid或稳定id便于DOM验收；window.novaboxDebug暴露只读getState和demo动作便于测试",
+    "刷新复位内存数据；无真实后端/MCP/窗口追随，界面和README明确原型边界"
+  ],
+  "constraints": [
+    "只能新增/修改prototype目录及plan任务日志",
+    "不改docs、不安装依赖、不启动长期服务",
+    "无git仓库无需提交",
+    "完成后运行可用的静态/语法mini验证"
+  ]
+}

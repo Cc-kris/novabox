@@ -1,0 +1,70 @@
+{
+  "apiVersion": "novabox/v1",
+  "metadata": {
+    "id": "timestamp-convert",
+    "name": "时间戳转换",
+    "version": "1.0.0",
+    "summary": "时间戳与日期互转，输出本地时间、UTC 和 Unix 时间。",
+    "category": "时间处理",
+    "icon": "clock",
+    "keywords": ["时间戳", "Unix", "日期", "UTC", "时区", "转换"],
+    "source": "builtin",
+    "updatedAt": "2026-10-29"
+  },
+  "inputs": {
+    "schema": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "时间戳或日期",
+          "minLength": 1,
+          "maxLength": 80,
+          "x-ui": { "widget": "text", "placeholder": "例如 1761748800 或 2026-10-29 12:00:00" }
+        },
+        "timezone": {
+          "type": "string",
+          "title": "本地时区",
+          "default": "UTC+8",
+          "enum": ["UTC+8", "UTC"]
+        }
+      },
+      "required": ["value"]
+    }
+  },
+  "view": { "layout": "form-result", "submitLabel": "转换时间" },
+  "execution": {
+    "type": "workflow",
+    "steps": [
+      {
+        "type": "transform",
+        "var": "result",
+        "op": "timestamp_convert",
+        "args": { "value": "{{input.value}}", "timezone": "{{input.timezone}}" }
+      },
+      { "type": "set", "var": "summary", "value": "时间解析完成" },
+      { "type": "template", "var": "value", "template": "{{vars.result.local}}" },
+      { "type": "template", "var": "details", "template": "ISO {{vars.result.iso}} · Unix {{vars.result.epochSeconds}} · 毫秒 {{vars.result.epochMilliseconds}} · {{vars.result.weekday}}" }
+    ]
+  },
+  "outputs": {
+    "mapping": {
+      "summary": "{{vars.summary}}",
+      "value": "{{vars.value}}",
+      "details": "{{vars.details}}"
+    }
+  },
+  "permissions": { "network": false, "filesystem": false, "shell": false, "sideEffects": false },
+  "tests": [
+    {
+      "name": "解析 10 位时间戳",
+      "inputs": { "value": "1793275200", "timezone": "UTC+8" },
+      "expect": { "summary": "时间解析完成", "details": "ISO 2026-10-29T12:00:00.000Z · Unix 1793275200 · 毫秒 1793275200000 · 星期四" }
+    },
+    {
+      "name": "解析 ISO 日期",
+      "inputs": { "value": "2026-10-29T12:00:00Z", "timezone": "UTC" },
+      "expect": { "value": "2026年10月29日星期四 12:00:00", "details": "ISO 2026-10-29T12:00:00.000Z · Unix 1793275200 · 毫秒 1793275200000 · 星期四" }
+    }
+  ]
+}

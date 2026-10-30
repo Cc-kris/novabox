@@ -1,0 +1,86 @@
+{
+  "apiVersion": "novabox/v1",
+  "metadata": {
+    "id": "unit-convert",
+    "name": "单位换算",
+    "version": "1.0.0",
+    "summary": "长度、重量与温度的确定性单位换算。",
+    "category": "数据转换",
+    "icon": "ruler",
+    "keywords": ["单位", "长度", "重量", "温度", "换算", "km", "kg"],
+    "source": "builtin",
+    "updatedAt": "2026-10-29"
+  },
+  "inputs": {
+    "schema": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "title": "换算类别",
+          "default": "length",
+          "enum": ["length", "weight", "temperature"]
+        },
+        "value": {
+          "type": "number",
+          "title": "数值",
+          "default": 1
+        },
+        "from": {
+          "type": "string",
+          "title": "原单位",
+          "description": "长度 m/km/cm/mm/mi/ft/in；重量 kg/g/t/lb/oz；温度 C/F/K",
+          "minLength": 1,
+          "maxLength": 8
+        },
+        "to": {
+          "type": "string",
+          "title": "目标单位",
+          "minLength": 1,
+          "maxLength": 8
+        }
+      },
+      "required": ["category", "value", "from", "to"]
+    }
+  },
+  "view": { "layout": "form-result", "submitLabel": "换算" },
+  "execution": {
+    "type": "workflow",
+    "steps": [
+      {
+        "type": "transform",
+        "var": "result",
+        "op": "unit_convert",
+        "args": {
+          "category": "{{input.category}}",
+          "value": "{{input.value}}",
+          "from": "{{input.from}}",
+          "to": "{{input.to}}"
+        }
+      },
+      { "type": "set", "var": "summary", "value": "换算完成" },
+      { "type": "template", "var": "value", "template": "{{vars.result.formatted}} {{input.to}}" },
+      { "type": "template", "var": "details", "template": "{{vars.result.expression}}（{{vars.result.category}}）" }
+    ]
+  },
+  "outputs": {
+    "mapping": {
+      "summary": "{{vars.summary}}",
+      "value": "{{vars.value}}",
+      "details": "{{vars.details}}"
+    }
+  },
+  "permissions": { "network": false, "filesystem": false, "shell": false, "sideEffects": false },
+  "tests": [
+    {
+      "name": "千米换米",
+      "inputs": { "category": "length", "value": 1.5, "from": "km", "to": "m" },
+      "expect": { "value": "1,500 m", "details": "1.5 千米 = 1,500 米（长度）" }
+    },
+    {
+      "name": "摄氏度换华氏度",
+      "inputs": { "category": "temperature", "value": 100, "from": "C", "to": "F" },
+      "expect": { "value": "212 F", "details": "100 摄氏度 = 212 华氏度（温度）" }
+    }
+  ]
+}

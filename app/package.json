@@ -1,0 +1,16 @@
+{
+  "name": "novabox",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Novabox local tool core, workspace UI and MCP adapter",
+  "scripts": {
+    "start": "node server.mjs",
+    "mcp": "node mcp-server.mjs",
+    "test": "node --test test/*.test.mjs",
+    "smoke": "node test/smoke.mjs"
+  },
+  "engines": {
+    "node": ">=22.5"
+  }
+}

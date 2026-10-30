@@ -1,0 +1,82 @@
+{
+  "apiVersion": "novabox/v1",
+  "metadata": {
+    "id": "base64-convert",
+    "name": "Base64 编解码",
+    "version": "1.0.0",
+    "summary": "文本与 Base64 双向转换，支持 UTF-8 中文。",
+    "category": "开发辅助",
+    "icon": "binary",
+    "keywords": ["Base64", "编码", "解码", "UTF-8", "开发"],
+    "source": "builtin",
+    "updatedAt": "2026-10-29"
+  },
+  "inputs": {
+    "schema": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "title": "内容",
+          "maxLength": 200000,
+          "x-ui": { "widget": "textarea", "rows": 8, "placeholder": "输入要编码或解码的内容" }
+        },
+        "mode": {
+          "type": "string",
+          "title": "操作",
+          "default": "编码",
+          "enum": ["编码", "解码"]
+        }
+      },
+      "required": ["text", "mode"]
+    }
+  },
+  "view": { "layout": "form-result", "submitLabel": "执行转换" },
+  "execution": {
+    "type": "workflow",
+    "steps": [
+      {
+        "type": "switch",
+        "var": "result",
+        "cases": [
+          {
+            "when": "input.mode == '解码'",
+            "steps": [
+              { "type": "transform", "var": "result", "op": "base64_convert", "args": { "text": "{{input.text}}", "mode": "decode" } },
+              { "type": "set", "var": "summary", "value": "Base64 已解码" }
+            ]
+          },
+          {
+            "when": "true",
+            "steps": [
+              { "type": "transform", "var": "result", "op": "base64_convert", "args": { "text": "{{input.text}}", "mode": "encode" } },
+              { "type": "set", "var": "summary", "value": "文本已编码" }
+            ]
+          }
+        ]
+      },
+      { "type": "template", "var": "value", "template": "{{vars.result.text}}" },
+      { "type": "template", "var": "details", "template": "{{vars.result.mode}}，{{vars.result.bytes}} 字节 UTF-8 数据。" }
+    ]
+  },
+  "outputs": {
+    "mapping": {
+      "summary": "{{vars.summary}}",
+      "value": "{{vars.value}}",
+      "details": "{{vars.details}}"
+    }
+  },
+  "permissions": { "network": false, "filesystem": false, "shell": false, "sideEffects": false },
+  "tests": [
+    {
+      "name": "编码英文",
+      "inputs": { "text": "Novabox", "mode": "编码" },
+      "expect": { "summary": "文本已编码", "value": "Tm92YWJveA==", "details": "已编码，7 字节 UTF-8 数据。" }
+    },
+    {
+      "name": "解码中文",
+      "inputs": { "text": "5L2g5aW977yMTm92YWJveA==", "mode": "解码" },
+      "expect": { "summary": "Base64 已解码", "value": "你好，Novabox" }
+    }
+  ]
+}

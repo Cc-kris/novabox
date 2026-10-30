@@ -1,0 +1,98 @@
+{
+  "apiVersion": "novabox/v1",
+  "metadata": {
+    "id": "json-format",
+    "name": "JSON 转换",
+    "version": "1.0.0",
+    "summary": "格式化、压缩 JSON，或把对象数组转成 CSV。",
+    "category": "数据转换",
+    "icon": "braces",
+    "keywords": ["JSON", "格式化", "压缩", "CSV", "转换"],
+    "source": "builtin",
+    "updatedAt": "2026-10-29"
+  },
+  "inputs": {
+    "schema": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "title": "JSON 内容",
+          "maxLength": 200000,
+          "x-ui": { "widget": "textarea", "rows": 11, "placeholder": "粘贴 JSON，或对象数组" }
+        },
+        "mode": {
+          "type": "string",
+          "title": "输出格式",
+          "default": "格式化",
+          "enum": ["格式化", "压缩", "转 CSV"]
+        }
+      },
+      "required": ["text", "mode"]
+    }
+  },
+  "view": { "layout": "form-result", "submitLabel": "转换 JSON" },
+  "execution": {
+    "type": "workflow",
+    "steps": [
+      {
+        "type": "switch",
+        "var": "result",
+        "cases": [
+          {
+            "when": "input.mode == '压缩'",
+            "steps": [
+              { "type": "transform", "var": "result", "op": "json_convert", "args": { "text": "{{input.text}}", "mode": "minify" } },
+              { "type": "set", "var": "summary", "value": "JSON 已压缩" },
+              { "type": "template", "var": "value", "template": "{{vars.result.text}}" },
+              { "type": "set", "var": "details", "value": "已移除所有非必要空白。" }
+            ]
+          },
+          {
+            "when": "input.mode == '转 CSV'",
+            "steps": [
+              { "type": "transform", "var": "result", "op": "json_convert", "args": { "text": "{{input.text}}", "mode": "json_to_csv" } },
+              { "type": "set", "var": "summary", "value": "已转换为 CSV" },
+              { "type": "template", "var": "value", "template": "{{vars.result.text}}" },
+              { "type": "set", "var": "details", "value": "仅支持顶层为对象数组的 JSON；嵌套对象会保留为 JSON 文本。" }
+            ]
+          },
+          {
+            "when": "true",
+            "steps": [
+              { "type": "transform", "var": "result", "op": "json_convert", "args": { "text": "{{input.text}}", "mode": "pretty" } },
+              { "type": "set", "var": "summary", "value": "JSON 已格式化" },
+              { "type": "template", "var": "value", "template": "{{vars.result.text}}" },
+              { "type": "set", "var": "details", "value": "使用 2 空格缩进，结构已重新排版。" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "outputs": {
+    "mapping": {
+      "summary": "{{vars.summary}}",
+      "value": "{{vars.value}}",
+      "details": "{{vars.details}}"
+    }
+  },
+  "permissions": { "network": false, "filesystem": false, "shell": false, "sideEffects": false },
+  "tests": [
+    {
+      "name": "格式化对象",
+      "inputs": { "text": "{\"a\":1,\"b\":[2,3]}", "mode": "格式化" },
+      "expect": { "summary": "JSON 已格式化", "value": "{\n  \"a\": 1,\n  \"b\": [\n    2,\n    3\n  ]\n}" }
+    },
+    {
+      "name": "压缩对象",
+      "inputs": { "text": "{ \"a\": 1, \"b\": 2 }", "mode": "压缩" },
+      "expect": { "value": "{\"a\":1,\"b\":2}" }
+    },
+    {
+      "name": "对象数组转 CSV",
+      "inputs": { "text": "[{\"name\":\"A\",\"score\":1},{\"name\":\"B\",\"score\":2}]", "mode": "转 CSV" },
+      "expect": { "value": "name,score\nA,1\nB,2" }
+    }
+  ]
+}

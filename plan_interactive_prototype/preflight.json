@@ -1,0 +1,12 @@
+{
+  "project_root": "/Users/mac/Documents/Dev/Novabox",
+  "plan_dir": "/Users/mac/Documents/Dev/Novabox/plan_interactive_prototype",
+  "python": "/Applications/Galley-0.6.4-prev.app/Contents/Resources/python/bin/python3",
+  "node": null,
+  "rg": "/opt/homebrew/bin/rg",
+  "plan_writable": true,
+  "existing_files": [
+    "docs/V1.0/V1.0_ui_brand_design_20261028_V1.md",
+    "docs/V1.0/V1.0_product_solution_20261028_V1.md"
+  ]
+}

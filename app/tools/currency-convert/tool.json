@@ -1,0 +1,78 @@
+{
+  "apiVersion": "novabox/v1",
+  "metadata": {
+    "id": "currency-convert",
+    "name": "汇率换算",
+    "version": "1.0.0",
+    "summary": "按离线参考汇率换算 12 种常用币种，结果明确标注汇率快照日期。",
+    "category": "金融计算",
+    "icon": "money",
+    "keywords": ["汇率", "货币", "美元", "人民币", "换算", "currency"],
+    "source": "builtin",
+    "updatedAt": "2026-10-29"
+  },
+  "inputs": {
+    "schema": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "title": "金额",
+          "description": "要换算的金额，支持小数。",
+          "default": 100,
+          "minimum": 0
+        },
+        "from": {
+          "type": "string",
+          "title": "原币种",
+          "description": "CNY 人民币、USD 美元、EUR 欧元、JPY 日元、GBP 英镑、HKD 港币、KRW 韩元、AUD 澳元、CAD 加元、SGD 新加坡元、CHF 瑞士法郎、TWD 新台币。",
+          "default": "CNY",
+          "enum": ["CNY", "USD", "EUR", "JPY", "GBP", "HKD", "KRW", "AUD", "CAD", "SGD", "CHF", "TWD"]
+        },
+        "to": {
+          "type": "string",
+          "title": "目标币种",
+          "description": "选择要换算到的币种。",
+          "default": "USD",
+          "enum": ["CNY", "USD", "EUR", "JPY", "GBP", "HKD", "KRW", "AUD", "CAD", "SGD", "CHF", "TWD"]
+        }
+      },
+      "required": ["amount", "from", "to"]
+    }
+  },
+  "view": { "layout": "form-result", "submitLabel": "换算汇率" },
+  "execution": {
+    "type": "workflow",
+    "steps": [
+      {
+        "type": "transform",
+        "var": "result",
+        "op": "currency_convert",
+        "args": { "amount": "{{input.amount}}", "from": "{{input.from}}", "to": "{{input.to}}" }
+      },
+      { "type": "set", "var": "summary", "value": "汇率换算完成" },
+      { "type": "template", "var": "value", "template": "{{vars.result.formatted}}" },
+      { "type": "template", "var": "details", "template": "{{vars.result.details}}" }
+    ]
+  },
+  "outputs": {
+    "mapping": {
+      "summary": "{{vars.summary}}",
+      "value": "{{vars.value}}",
+      "details": "{{vars.details}}"
+    }
+  },
+  "permissions": { "network": false, "filesystem": false, "shell": false, "sideEffects": false },
+  "tests": [
+    {
+      "name": "人民币换算美元",
+      "inputs": { "amount": 7.08, "from": "CNY", "to": "USD" },
+      "expect": { "summary": "汇率换算完成", "value": "1" }
+    },
+    {
+      "name": "美元换算人民币",
+      "inputs": { "amount": 100, "from": "USD", "to": "CNY" },
+      "expect": { "summary": "汇率换算完成", "value": "708" }
+    }
+  ]
+}

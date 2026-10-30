@@ -1,0 +1,17 @@
+{
+  "name": "novabox-local",
+  "plugins": [
+    {
+      "name": "novabox",
+      "source": {
+        "source": "local",
+        "path": "./plugins/novabox"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_USE"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

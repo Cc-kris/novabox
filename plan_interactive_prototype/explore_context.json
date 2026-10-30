@@ -1,0 +1,14 @@
+{
+  "task": "只读探索 Novabox 高保真原型实施环境",
+  "work_dir": "/Users/mac/Documents/Dev/Novabox/plan_interactive_prototype",
+  "project_root": "/Users/mac/Documents/Dev/Novabox",
+  "input_files": {
+    "product": "/Users/mac/Documents/Dev/Novabox/docs/V1.0/V1.0_product_solution_20261028_V1.md",
+    "ui": "/Users/mac/Documents/Dev/Novabox/docs/V1.0/V1.0_ui_brand_design_20261028_V1.md",
+    "preflight": "/Users/mac/Documents/Dev/Novabox/plan_interactive_prototype/preflight.json"
+  },
+  "output_files": {
+    "report": "/Users/mac/Documents/Dev/Novabox/plan_interactive_prototype/exploration_findings.md"
+  },
+  "evidence_dir": "/Users/mac/Documents/Dev/Novabox/plan_interactive_prototype/evidence"
+}

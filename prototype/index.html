@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novabox - 让方法，成为工具</title>
+  <link rel="stylesheet" href="styles.css?v=20261028-fix5">
+</head>
+<body>
+  <svg class="flow-frame" viewBox="0 0 1000 800" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="flow-spectrum" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#18C998"/>
+        <stop offset=".34" stop-color="#3B9CFF"/>
+        <stop offset=".68" stop-color="#9A63FF"/>
+        <stop offset="1" stop-color="#18C998"/>
+      </linearGradient>
+    </defs>
+    <path class="flow-frame-base" d="M 2 2 H 980 Q 998 2 998 20 V 780 Q 998 798 980 798 H 2"/>
+    <path class="flow-frame-run flow-frame-run-a" pathLength="100" d="M 2 2 H 980 Q 998 2 998 20 V 780 Q 998 798 980 798 H 2"/>
+    <path class="flow-frame-run flow-frame-run-b" pathLength="100" d="M 2 2 H 980 Q 998 2 998 20 V 780 Q 998 798 980 798 H 2"/>
+  </svg>
+  <div id="app">
+    <!-- Header -->
+    <header class="app-header" role="banner">
+      <div class="header-left">
+        <svg class="logo-mark" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 4h4v16H4V4zm8 0h4l4 8-4 8h-4l4-8-4-8z" fill="currentColor"/>
+        </svg>
+        <span class="logo-text">Novabox</span>
+      </div>
+      <div class="header-context" aria-label="当前工作区">工作区</div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="app-main" id="main-content" role="main">
+      <!-- Dynamically rendered by app.js -->
+    </main>
+
+    <!-- Footer Status Bar -->
+    <footer class="app-footer" role="contentinfo">
+      <div class="footer-status">
+        <span class="status-indicator" data-testid="host-status">
+          <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true">
+            <circle cx="4" cy="4" r="3" fill="currentColor"/>
+          </svg>
+          <span id="host-text">已连接 Codex</span>
+        </span>
+      </div>
+      <div class="footer-info">
+        <span id="footer-message" data-testid="footer-message"></span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Dialogs -->
+  <div id="dialog-overlay" class="dialog-overlay" role="dialog" aria-modal="true" aria-labelledby="dialog-title" hidden>
+    <div class="dialog-content">
+      <div class="dialog-header">
+        <h2 id="dialog-title" class="dialog-title"></h2>
+        <button class="icon-btn dialog-close" aria-label="关闭" data-action="close-dialog">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="dialog-body" id="dialog-body"></div>
+      <div class="dialog-footer" id="dialog-footer"></div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Command Menu -->
+  <div id="command-menu" class="command-menu" role="dialog" aria-modal="true" aria-label="命令菜单" hidden>
+    <div class="command-menu-content">
+      <input type="text" class="command-input" placeholder="搜索命令..." aria-label="搜索命令" data-testid="command-input">
+      <div class="command-list" role="listbox"></div>
+    </div>
+  </div>
+
+  <script src="app.js?v=20261028-fix5"></script>
+</body>
+</html>

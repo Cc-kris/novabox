@@ -1,0 +1,35 @@
+{
+  "prototype_type": "zero-build static HTML + vanilla JS",
+  "recommended_structure": {
+    "entry_file": "prototype/index.html",
+    "static_dir": "prototype/",
+    "serve_from": "/Users/mac/Documents/Dev/Novabox/prototype",
+    "serve_port": 8000,
+    "access_url": "http://localhost:8000/index.html"
+  },
+  "key_pages": [
+    {
+      "name": "工具库主页",
+      "file": "index.html",
+      "description": "顶栏、导航、工具列表、搜索"
+    },
+    {
+      "name": "工具详情/运行页",
+      "file": "tool_detail.html",
+      "description": "Schema驱动表单、运行按钮、结果展示"
+    },
+    {
+      "name": "草稿预览",
+      "file": "draft_preview.html",
+      "description": "测试结果、发布确认"
+    }
+  ],
+  "shared_assets": [
+    "styles.css (Design Tokens + 组件样式)",
+    "app.js (导航、状态、模拟数据)",
+    "mock_data.json (示例工具定义)"
+  ],
+  "verification_method": "启动Python http.server，用web_execute_js读取DOM验证品牌、布局、交互状态",
+  "no_build_tools": true,
+  "no_npm_install": true
+}

@@ -1,0 +1,72 @@
+name: Windows build
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Download portable Node 24 x64
+        run: |
+          $version = "24.22.2"
+          New-Item -ItemType Directory -Force windows/node | Out-Null
+          Invoke-WebRequest "https://nodejs.org/dist/v$version/node-v$version-win-x64.zip" -OutFile node.zip
+          Expand-Archive node.zip -DestinationPath node-extract -Force
+          Copy-Item "node-extract/node-v$version-win-x64/*" windows/node -Recurse -Force
+
+      - name: Smoke test local server
+        run: |
+          $env:NOVABOX_DATA_DIR = Join-Path $env:RUNNER_TEMP "novabox-smoke"
+          $env:NOVABOX_PORT = "8797"
+          $node = "windows/node/node.exe"
+          $process = Start-Process -FilePath $node -ArgumentList "app/server.mjs" -PassThru -WindowStyle Hidden -RedirectStandardOutput smoke.out -RedirectStandardError smoke.err
+          try {
+            $ok = $false
+            for ($i = 0; $i -lt 40; $i++) {
+              Start-Sleep -Milliseconds 250
+              try {
+                $health = Invoke-RestMethod "http://127.0.0.1:8797/api/health"
+                if ($health.name -eq "Novabox") { $ok = $true; break }
+              } catch {}
+            }
+            if (-not $ok) {
+              Get-Content smoke.out -ErrorAction SilentlyContinue
+              Get-Content smoke.err -ErrorAction SilentlyContinue
+              throw "Novabox server did not become healthy"
+            }
+            $health | ConvertTo-Json -Compress
+          } finally {
+            Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+          }
+
+      - name: Install builder dependencies
+        run: npm ci --prefix windows
+
+      - name: Package Windows installer
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: npm run dist --prefix windows
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: novabox-windows-setup
+          path: windows/release/*.exe
+          if-no-files-found: error

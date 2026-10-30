@@ -1,0 +1,53 @@
+appId: com.novabox.desktop
+productName: Novabox
+copyright: Copyright © 2026 Novabox
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - main.cjs
+  - package.json
+
+extraResources:
+  - from: ../app
+    to: app
+    filter:
+      - "**/*"
+      - "!.run/**"
+      - "!data/**"
+      - "!test/**"
+      - "!node_modules/**"
+      - "!*.db"
+      - "!*.db-shm"
+      - "!*.db-wal"
+      - "!update.json"
+      - "!.DS_Store"
+  - from: node
+    to: node
+    filter:
+      - "**/*"
+
+npmRebuild: false
+asar: true
+compression: normal
+
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  icon: build/icon.ico
+  artifactName: Novabox-${version}-Windows-Setup.${ext}
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowElevation: true
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Novabox
+  deleteAppDataOnUninstall: false
+  runAfterFinish: true

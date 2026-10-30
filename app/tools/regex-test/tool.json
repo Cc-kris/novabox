@@ -1,0 +1,77 @@
+{
+  "apiVersion": "novabox/v1",
+  "metadata": {
+    "id": "regex-test",
+    "name": "正则测试",
+    "version": "1.0.0",
+    "summary": "安全测试正则表达式，查看匹配位置与分组。",
+    "category": "开发辅助",
+    "icon": "regex",
+    "keywords": ["正则", "regex", "匹配", "测试", "分组"],
+    "source": "builtin",
+    "updatedAt": "2026-10-29"
+  },
+  "inputs": {
+    "schema": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "title": "待匹配文本",
+          "maxLength": 50000,
+          "x-ui": { "widget": "textarea", "rows": 8, "placeholder": "粘贴需要测试的文本" }
+        },
+        "pattern": {
+          "type": "string",
+          "title": "正则表达式",
+          "minLength": 1,
+          "maxLength": 300,
+          "x-ui": { "widget": "text", "placeholder": "例如 \\b\\w+@\\w+\\.com\\b" }
+        },
+        "flags": {
+          "type": "string",
+          "title": "修饰符",
+          "default": "g",
+          "description": "可选 g i m s u，系统会自动补充 g",
+          "maxLength": 5
+        }
+      },
+      "required": ["text", "pattern"]
+    }
+  },
+  "view": { "layout": "form-result", "submitLabel": "测试匹配" },
+  "execution": {
+    "type": "workflow",
+    "steps": [
+      {
+        "type": "transform",
+        "var": "result",
+        "op": "regex_test",
+        "args": { "text": "{{input.text}}", "pattern": "{{input.pattern}}", "flags": "{{input.flags}}" }
+      },
+      { "type": "template", "var": "summary", "template": "找到 {{vars.result.count}} 处匹配" },
+      { "type": "template", "var": "value", "template": "{{vars.result.count}}" },
+      { "type": "template", "var": "details", "template": "{{vars.result.preview}}" }
+    ]
+  },
+  "outputs": {
+    "mapping": {
+      "summary": "{{vars.summary}}",
+      "value": "{{vars.value}}",
+      "details": "{{vars.details}}"
+    }
+  },
+  "permissions": { "network": false, "filesystem": false, "shell": false, "sideEffects": false },
+  "tests": [
+    {
+      "name": "匹配两个邮箱",
+      "inputs": { "text": "a@b.com c@d.com x", "pattern": "\\b\\w+@\\w+\\.com\\b", "flags": "g" },
+      "expect": { "summary": "找到 2 处匹配", "value": 2, "details": "0: a@b.com\n8: c@d.com" }
+    },
+    {
+      "name": "无匹配时返回零",
+      "inputs": { "text": "no address", "pattern": "\\d+", "flags": "" },
+      "expect": { "summary": "找到 0 处匹配", "value": 0, "details": "没有匹配项" }
+    }
+  ]
+}
